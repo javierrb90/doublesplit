@@ -1,11 +1,11 @@
 from PIL import Image, ImageChops
 
-def isWidespread(img):
+def isWidespread(img,sepwidth,threshold):
         # Recortamos el margen que separa las dos mitades de la imagen
-        middle_crop = getMiddleSeparation(img,25)
+        middle_crop = getMiddleSeparation(img,sepwidth)
 
         # Eliminamos el polvo y convertimos los colores a BW
-        middle_crop = cleanDusk(middle_crop)
+        middle_crop = cleanDusk(middle_crop,threshold)
 
         #Si no es un margen solido entonces quizas se trate de un widespread
         if not isSolidColor(middle_crop):
@@ -31,8 +31,9 @@ def getMiddleSeparation(img,separation_size=50):
 
         return img.crop((left,top,right,bottom))
 
-def cleanDusk(img, threshold = 50):
+def cleanDusk(img, threshold = 150):
         # Convertimos en negro los puntos de la imagen por debajo de cierto threshold y en blanco el resto
+
         img = img.convert('L')
         return img.point(lambda x: 0 if x<threshold else 255, '1')
 
